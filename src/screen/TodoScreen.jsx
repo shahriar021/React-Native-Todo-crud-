@@ -25,8 +25,13 @@ const todoInfo = [
 const TodoScreen = () => {
   const [data, setData] = useState("");
   const [todoList, setTodoList] = useState([]);
+  const [editedTodo,setEditedTodo]=useState(null)
 
   const handleTodo=()=>{
+    if(data===""){
+      alert("add something...")
+      return;
+    }
     setTodoList([...todoList,{id:Date.now().toString(),task:data}])
     setData("")
   }
@@ -36,6 +41,25 @@ const TodoScreen = () => {
 
     setTodoList(updatedTodoList)
     
+  }
+
+
+  const handleEdited=(todo)=>{
+    setEditedTodo(todo)
+    setData(todo.task)
+  }
+
+  const handleUpdateTodo=()=>{
+    const updatedTodo=todoList.map((item)=>{
+      if(item.id===editedTodo.id){
+        return {...item,task:data}
+      }
+      return item;
+    })
+
+    setTodoList(updatedTodo)
+    setEditedTodo(null)
+    setData("")
   }
 
   const renderTodos = ({ item, index }) => {
@@ -57,7 +81,7 @@ const TodoScreen = () => {
         <Text style={{ fontWeight: "bold", fontStyle: "italic", fontSize: 20 }}>
           {item.task}
         </Text>
-        <IconButton icon="pencil" iconColor="green" />
+        <IconButton icon="pencil" iconColor="green" onPress={()=>handleEdited(item)}/>
         <IconButton icon="trash-can" iconColor="red" onPress={()=>handleDelete(item.id)}/>
       </View>
     );
@@ -76,7 +100,31 @@ const TodoScreen = () => {
         value={data}
         onChangeText={(userData) => setData(userData)}
       />
-      <TouchableOpacity
+      
+      {editedTodo ?<TouchableOpacity
+        style={{
+          backgroundColor: "#000",
+          color: "#654562",
+          marginTop: 10,
+          borderRadius: 50,
+        }}
+        onPress={() => handleUpdateTodo()}
+      >
+        <Text
+          style={{
+            color: "white",
+            borderRadius: 6,
+            paddingHorizontal: 12,
+            paddingVertical: 12,
+            textAlign: "center",
+            fontStyle: "italic",
+            fontWeight: "bold",
+            fontSize: 20,
+          }}
+        >
+          update
+        </Text>
+      </TouchableOpacity>:<TouchableOpacity
         style={{
           backgroundColor: "#000",
           color: "#654562",
@@ -99,7 +147,7 @@ const TodoScreen = () => {
         >
           add here
         </Text>
-      </TouchableOpacity>
+      </TouchableOpacity>}
 
       <FlatList data={todoList} renderItem={renderTodos} />
 

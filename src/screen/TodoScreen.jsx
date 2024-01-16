@@ -78,7 +78,7 @@ const TodoScreen = () => {
           justifyContent: "space-around",
         }}
       >
-        <Text style={{ fontWeight: "bold", fontStyle: "italic", fontSize: 20 }}>
+        <Text style={{ fontWeight: "bold", fontStyle: "italic", fontSize: 20,padding:5 }}>
           {item.task}
         </Text>
         <IconButton icon="pencil" iconColor="green" onPress={()=>handleEdited(item)}/>
